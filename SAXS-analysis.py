@@ -11,23 +11,26 @@ import matplotlib.pyplot as plt
 
 biglog = open("livelogfile.log", 'r')
 contents = biglog.readlines()
-with biglog as fp:
-    num_lines = sum(1 for line in fp)
 
-rows = list(range(1, num_lines))
-print(rows)
-I0 = []
+num_lines2 = len(contents)
+print(["Number of lines:", str(num_lines2)])
+#rows = list(range(0, num_lines2-1))
+rows = list(range(0, num_lines2-1))
+
+I0 = list(range(0, num_lines2-1))
 for row in rows:
     row_n = contents[row]
     split_lines = row_n.split(" ")
-    I0_str = split_lines[20]
-    I0[row] = float(I0_str.split('"')) # value is formatted as "number", need to remove that shit
+    I0_list = str(split_lines[20])
+    I0_str = (I0_list.split('"'))
+    I0[row] = I0_str[1]
 
-print(I0)
+plt.plot(rows, I0)
+plt.show()
 
 #row_n = contents[row]
 #split_lines = row_1.split(" ")
-# Start at 5, 7 because the timestamp format is fucked
+# Start at 5, 7 because the timestamp formatting on the first few lines is fucked
 
 # Below extracts the variable name and corresponding value
 # For the time being I0 is all we want, find where that occurs and plot that
