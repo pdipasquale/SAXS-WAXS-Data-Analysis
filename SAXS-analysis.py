@@ -9,6 +9,12 @@ import matplotlib.pyplot as plt
 # Reformat Log Files #
 # Read in log files and reformat them to something actually readable, with headers and split the log file if necessary. place these reformatted files into a new file. #
 
+## Maybe we don't need the log file reformatting step.
+
+# Below extracts the variable name and corresponding value
+# For the time being I0 is all we want, find where that occurs and plot that
+# We can just change the desired column in the moment, and also just list out what column corresponds to whatever motor position we want to look at
+
 biglog = open("livelogfile.log", 'r')
 contents = biglog.readlines()
 
@@ -25,24 +31,12 @@ for row in rows:
     I0_str = (I0_list.split('"'))
     I0[row] = I0_str[1]
 
-plt.plot(rows, I0)
+plt.plot(rows[1:100], I0[1:100]) # only plotting the first 100 lines becuase there are way too many in the log file
 plt.show()
 
-#row_n = contents[row]
-#split_lines = row_1.split(" ")
 # Start at 5, 7 because the timestamp formatting on the first few lines is fucked
 
-# Below extracts the variable name and corresponding value
-# For the time being I0 is all we want, find where that occurs and plot that
 
-#lines = list(range(1,len(split_lines)))
-#for line in lines:
-#	print(line)
-#	print(split_lines[line])
-# I0 is at line 18/line 20
-#I0_str = split_lines[20]
-#I0 = I0_str.split('"') # value is formatted as "number", need to remove that shit
-#print(float(I0[1]))
 
 
 # DarkField correction. #
