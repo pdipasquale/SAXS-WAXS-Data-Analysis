@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 # Reformat Log Files #
 # Read in log files and reformat them to something actually readable, with headers and split the log file if necessary. place these reformatted files into a new file. #
 
-## Maybe we don't need the log file reformatting step.
+    ## Maybe we don't need the log file reformatting step.
 
 # Below extracts the variable name and corresponding value
 # For the time being I0 is all we want, find where that occurs and plot that
@@ -34,18 +34,17 @@ for row in rows:
 plt.plot(rows[1:100], I0[1:100]) # only plotting the first 100 lines becuase there are way too many in the log file
 plt.show()
 
-# Start at 5, 7 because the timestamp formatting on the first few lines is fucked
-
-
-
-
 # DarkField correction. #
 # Subtract the dark field images from the frames with the same exposure times. #
 
+    # read in dark field tiffs
+
+    # read in diffraction pattern tiffs
 
 # Integrated intensity plot #
 # Plot the integrated intensity of each of the diffraction images against energy, overplot I0 and separately plot the ratio of intensities (I/I0) #
 
+    # read in DF corrected tiffs, sum the entire screen and save that value in an array. loop through, keep it oer frame at first, sort out energy stuff later.
 
 # Reconstruction #
 # Reconstruct the CTF of the sample in 1D. Steps are as follows below: #
