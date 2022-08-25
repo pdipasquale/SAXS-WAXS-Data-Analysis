@@ -5,18 +5,18 @@ This code should run some real-time analysis of the data from any experiment we 
 The steps required for analysis are listed below. Each step is separated by a section, with an explanation on what needs to be done for analysis. #
 
 ----Dat2Tif----
-    Convert raw image files into .tif for ease of import and analysis. #
+        Convert raw image files into .tif for ease of import and analysis. #
 
 ----Read in log files---- (done)
-    Read the log file in and plot whatever output variable we need.
-    If anything is wrong we should write some code to quickly overplot absorption and motor values, to diagnose any bad stuff  <- I0 is set up for now, can only update on the fly
+        Read the log file in and plot whatever output variable we need.
+        If anything is wrong we should write some code to quickly overplot absorption and motor values, to diagnose any bad stuff  <- I0 is set up for now, can only update on the fly
 
 ----DarkField correction.----
-    Subtract the dark field images from the frames with the same exposure times.
+        Subtract the dark field images from the frames with the same exposure times.
 
 
 ----Integrated intensity plot----
-    Plot the integrated intensity of each of the diffraction images against energy, overplot I0 and separately plot the ratio of intensities (I/I0)
+        Plot the integrated intensity of each of the diffraction images against energy, overplot I0 and separately plot the ratio of intensities (I/I0)
 
 
 ----Reconstruction----
