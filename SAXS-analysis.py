@@ -1,6 +1,7 @@
 # This code should run some real-time analysis of the data from any experiment we perform at the SAXS/WAXS beamline (or any beamline for that matter). #
 import numpy as np
 import matplotlib.pyplot as plt
+from PIL import Image
 # The steps required for analysis are listed below. Each step is separated by a section, with an explanation on what needs to be done for analysis. #
 # Dat2Tif #
 # Convert raw image files into .tif for ease of import and analysis. #
@@ -34,12 +35,23 @@ for row in rows:
 plt.plot(rows[1:100], I0[1:100]) # only plotting the first 100 lines becuase there are way too many in the log file
 plt.show()
 
+# ---------------------------------------------- #
+## Need to import an image, the code for this is below:
+## Open image
+#file = 'image_file.tif'
+#im = Image.open(file)
+
+## Make into Numpy array
+#na = np.array(im)
+# ---------------------------------------------- #
+
 # DarkField correction. #
 # Subtract the dark field images from the frames with the same exposure times. #
 
     # read in dark field tiffs
-
+        # use the image import code
     # read in diffraction pattern tiffs
+        # use the image import code
 
 # Integrated intensity plot #
 # Plot the integrated intensity of each of the diffraction images against energy, overplot I0 and separately plot the ratio of intensities (I/I0) #
