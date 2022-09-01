@@ -18,7 +18,7 @@ from PIL import Image
 
 biglog = open("livelogfile.log", 'r')
 contents = biglog.readlines()
-
+# blah blah blah please work
 num_lines2 = len(contents)
 print(["Number of lines:", str(num_lines2)])
 #rows = list(range(0, num_lines2-1))
