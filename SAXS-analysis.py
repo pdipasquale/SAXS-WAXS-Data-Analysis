@@ -52,7 +52,7 @@ plt.show()
         # use the image import code
     # read in diffraction pattern tiffs
         # use the image import code
-
+df_corr = im - DF
 # Integrated intensity plot #
 # Plot the integrated intensity of each of the diffraction images against energy, overplot I0 and separately plot the ratio of intensities (I/I0) #
 
