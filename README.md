@@ -6,6 +6,7 @@ The steps required for analysis are listed below. Each step is separated by a se
 
 ----Dat2Tif----
         Convert raw image files into .tif for ease of import and analysis. #
+        ** Uploaded; needs to be checked **
 
 ----Read in log files---- (done)
         Read the log file in and plot whatever output variable we need.
