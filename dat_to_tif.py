@@ -4,7 +4,7 @@ def dat_to_tif(path_in, path_out, fnames, dim=2048):
     """
     Converts and saves a .dat file into a series of .tif images.
 
-    Data from the SAXS/WAXS beamline is saved in a .dat format, comprised of 
+    Spooled data from the ANDOR is saved in a .dat format, comprised of 
     multiple measurements. This function extracts the data for each measurement 
     and saves it as a .tif image.
     If converting an entire directory, consider dat_from_file.py instead.
@@ -18,7 +18,7 @@ def dat_to_tif(path_in, path_out, fnames, dim=2048):
         A list of names to use for each tif. If there are three tifs per dat, 
         this could be ['1','2','3']
     dim:
-        The height/width of an image in pixels; at SAXS/WAXS this is usually 2048
+        The height/width of an image in pixels; with ANDOR this is usually 2048
 
     ---------------------------------------------------------------------------
 

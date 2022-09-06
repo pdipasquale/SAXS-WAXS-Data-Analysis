@@ -27,25 +27,31 @@ def dat_from_file(path_in, path_out, dim=2048, tifsperdat=3, override=False):
     Author: Jake J. Rogers, La Trobe University
     Date: 6th of September, 2022
     """    
-    try:
-        os.mkdir(path_out)
-    except FileExistsError:
-        if not override:
-            print(
-            """File already exists!
-            Set the override tag to True to replace the directory.
-            This will delete all files in the output path.""")
-            return
-        else:
-            for file in os.listdir(path_out):
-                os.remove(path_out + '/' + file)
-            os.rmdir(path_out)
-            os.mkdir(path_out)
+#    try:
+#        os.mkdir(path_out)
+#    except FileExistsError:
+#        if not override:
+#            print(
+#            """File already exists!
+#            Set the override tag to True to replace the directory.
+#            This will delete all files in the output path.""")
+#            return
+#        else:
+#            for file in os.listdir(path_out):
+#                os.remove(path_out + '/' + file)
+#            os.rmdir(path_out)
+#            os.mkdir(path_out)
 
-    for (index, dat_name) in enumerate(os.listdir(path_in), 1):
-        print(f"index={index}, dat={dat_name}")
+    if not os.listdir(path_out):
+        idx = 0
+    else:
+        idx = len(os.listdir(path_out))
+        
+    
+    for (index, dat_name) in enumerate(sorted(os.listdir(path_in)), 1): # added sorted
+        print("index=" + str(index), "dat=" + str(dat_name)) #i had to change this because my version of python wasn't allowing the previous version
         dat_to_tif(
             path_in + '/' + dat_name, 
             path_out, 
-            [str(index*i) for i in range(1,tifsperdat+1)])
+            [str(idx + (index*i)) for i in range(1,tifsperdat+1)])
         
