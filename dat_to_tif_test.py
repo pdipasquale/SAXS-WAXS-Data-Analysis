@@ -10,7 +10,7 @@ spool_dirs = 8
 pathout = '/home/paul/Documents/SAXS-WAXS_test_data/fout'
 
 #spool_dirs_i = np.linspace(0, 8, 9, dtype=int, endpoint=True)
-spool_dirs_i = [0]
+spool_dirs_i = [0, 1, 2, 3, 4, 5, 6, 7, 8]
 c1 = 0
 c2 = 1
 c3 = 3
@@ -26,4 +26,3 @@ for dir_num in spool_dirs_i:
     #c3 = c3 + 3
     #if int(repr(fnum)[-1]) == 9:
     #    dir_num = dir_num + 1
-##upload please!##

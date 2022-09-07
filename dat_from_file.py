@@ -27,31 +27,34 @@ def dat_from_file(path_in, path_out, dim=2048, tifsperdat=3, override=False):
     Author: Jake J. Rogers, La Trobe University
     Date: 6th of September, 2022
     """    
-#    try:
-#        os.mkdir(path_out)
-#    except FileExistsError:
-#        if not override:
-#            print(
-#            """File already exists!
-#            Set the override tag to True to replace the directory.
-#            This will delete all files in the output path.""")
-#            return
-#        else:
-#            for file in os.listdir(path_out):
-#                os.remove(path_out + '/' + file)
-#            os.rmdir(path_out)
-#            os.mkdir(path_out)
+    #try:
+    #    os.mkdir(path_out)
+    #except FileExistsError:
+    #    if not override:
+    #        print(
+    #        """File already exists!
+    #        Set the override tag to True to replace the directory.
+    #        This will delete all files in the output path.""")
+    #        return
+    #    else:
+    #        for file in os.listdir(path_out):
+    #            os.remove(path_out + '/' + file)
+    #        os.rmdir(path_out)
+    #        os.mkdir(path_out)
 
-    if not os.listdir(path_out):
-        idx = 0
+    if not os.listdir(path_out): # Bandaid fix to the script erasing everything whenever
+        F = 1                    # we swap to a new directory
+        FF = tifsperdat
     else:
-        idx = len(os.listdir(path_out))
-        
-    
+        F = len(os.listdir(path_out))
+        FF = F + tifsperdat-1
+
     for (index, dat_name) in enumerate(sorted(os.listdir(path_in)), 1): # added sorted
-        print("index=" + str(index), "dat=" + str(dat_name)) #i had to change this because my version of python wasn't allowing the previous version
+        print("index=" + str(index), "dat=" + str(dat_name), "files = " + str(range(F,FF+1))) #i had to change this because my version of python wasn't allowing the previous version
         dat_to_tif(
             path_in + '/' + dat_name, 
             path_out, 
-            [str(idx + (index*i)) for i in range(1,tifsperdat+1)])
-        
+            [str((i)) for i in range(F,FF+1)])
+        F = F + 3
+        FF = FF + 3
+#             [str((i)) for i in range(1,tifsperdat+1)])
