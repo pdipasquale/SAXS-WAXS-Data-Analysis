@@ -2,6 +2,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
+
+spool_directory = '/home/paul/Documents/SAXS-WAXS_test_data/raw/Nigel_Naked_Test2_Fine_run2/spool/SpoolDirectory'
+tif_directory = '/home/paul/Documents/SAXS-WAXS_test_data/fout'
+
 # The steps required for analysis are listed below. Each step is separated by a section, with an explanation on what needs to be done for analysis. #
 # Dat2Tif #
 # Convert raw image files into .tif for ease of import and analysis. #
