@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from PIL import Image
+from scipy.fft import fft, ifft
 
 def read_tif(fname):
     im = Image.open(fname)
@@ -14,6 +15,20 @@ def read_tif(fname):
 #tif_directory = '/home/paul/Documents/SAXS-WAXS_test_data/fout'
 tif_directory = './test_frame'
 frame2 = tif_directory + '/2.tif'
+test_frame = read_tif(frame2)
+data = np.array(test_frame, dtype='f')
+print(data)
+print(data.dtype)
+data2 = np.double(data)
+print(data2)
+#plt.imshow(image_array)
+DF_mean = 300 # fix this!!!
+# DF Correction
+
+# index the middle line of the array for the 1-dimensional cross-section
+
+# ifft this middle line, angle for phase and abs(max(ifft))^2 for absorption
+# Scan this through energy
 
 # ---------------------------------------------- #
 # Need to import an image, the code for this is below:
@@ -28,10 +43,9 @@ frame2 = tif_directory + '/2.tif'
 #img = Image.open(frame2)
 #print(img)
 #img.show()
-test_frame = read_tif(frame2)
-image_array = np.array(test_frame)
 
-print(image_array)
-plt.imshow(image_array, cmap='gray')
-plt.show()
+
+#print(image_array)
+#plt.imshow(image_array, cmap='gray')
+#plt.show()
 # ---------------------------------------------- #
