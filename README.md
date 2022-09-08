@@ -21,17 +21,18 @@ The steps required for analysis are listed below. Each step is separated by a se
 
 
 ----Reconstruction----
+        The majority of this section is completed in the recon_test.py file
     Reconstruct the CTF of the sample in 1D. Steps are as follows below:
 
         Divide each frame by it's corresponding I0 value
 
         Convert the 2d image to a 1d diffraction pattern. This is either a line down the center, or we crop the image and sum across the x-axis #
-
+        **DONE!**
         Take the inverse fourier transform of the diffraction pattern. #
-
+        **DONE!**
         The max value, the autocorrelation, will be taken as the value for absorption. Some other analytical steps are required for absolute scaling, but we ignore that for now #
-
+        **DONE!**
         The phase will have to be checked manually, but we just take the angle of the complex transmission function and take the average of a pre-defined flat region #
         ^ this step requires some tweaking, maybe we can find the position that the phase region occurs using a simulation? #
-
+        Half done :'(
         The CTF Absorption and Phase should be overplot to show a complete result #
