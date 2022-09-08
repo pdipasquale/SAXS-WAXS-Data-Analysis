@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from PIL import Image
-from scipy.fft import fft, ifft
+from scipy.fft import fft, ifft, ifftshift, fftshift
 
 def read_tif(fname):
     im = Image.open(fname)
@@ -16,18 +16,33 @@ def read_tif(fname):
 tif_directory = './test_frame'
 frame2 = tif_directory + '/2.tif'
 test_frame = read_tif(frame2)
-data = np.array(test_frame, dtype='f')
-print(data)
-print(data.dtype)
+data = np.array(test_frame, dtype='d')
+#print(data)
+#print(data.dtype)
 data2 = np.double(data)
-print(data2)
+
 #plt.imshow(image_array)
 DF_mean = 300 # fix this!!!
+integ = sum(sum(data2[:] - DF_mean))
+print(integ)
 # DF Correction
 
 # index the middle line of the array for the 1-dimensional cross-section
+# one_d = data2[1024, :] # Line through x
+one_d = data2[:, 1024] - DF_mean # Line through y
+plt.plot(one_d)
+plt.show()
 
 # ifft this middle line, angle for phase and abs(max(ifft))^2 for absorption
+recon = ifftshift(ifft(one_d))
+absorption = np.sqrt(abs(max(recon))*abs(max(recon)))
+print(absorption)
+phase = np.unwrap(np.angle(recon))
+
+plt.plot(abs(recon))
+plt.show()
+plt.plot(phase)
+plt.show()
 # Scan this through energy
 
 # ---------------------------------------------- #
