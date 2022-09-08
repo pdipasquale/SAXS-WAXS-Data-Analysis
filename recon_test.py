@@ -3,6 +3,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
+import matplotlib
 from PIL import Image
 from scipy.fft import fft, ifft, ifftshift, fftshift
 
@@ -31,7 +32,9 @@ print(integ)
 # one_d = data2[1024, :] # Line through x
 one_d = data2[:, 1024] - DF_mean # Line through y
 plt.plot(one_d)
-plt.show()
+plt.savefig('./figures/1d_profile.png')
+plt.close()
+#plt.show()
 
 # ifft this middle line, angle for phase and abs(max(ifft))^2 for absorption
 recon = ifftshift(ifft(one_d))
@@ -40,9 +43,12 @@ print(absorption)
 phase = np.unwrap(np.angle(recon))
 
 plt.plot(abs(recon))
-plt.show()
+plt.savefig('./figures/1d_abs.png')
+plt.close()
+
 plt.plot(phase)
-plt.show()
+plt.savefig('./figures/1d_phase.png')
+plt.close()
 # Scan this through energy
 
 # ---------------------------------------------- #
