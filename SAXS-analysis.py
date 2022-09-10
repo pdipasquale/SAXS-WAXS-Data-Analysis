@@ -27,10 +27,18 @@ num_lines2 = len(contents)
 print(["Number of lines:", str(num_lines2)])
 #rows = list(range(0, num_lines2-1))
 rows = list(range(0, num_lines2-1))
-
-
-plt.plot(rows[1:100], I0[1:100]) # only plotting the first 100 lines becuase there are way too many in the log file
+I0_column = 20 #Change depending on the column that I0 is in
+I0 = list(range(0, num_lines2-1)) # work out the length (height) of the I0 array
+for row in rows: #loops through rows to populate the I0 array with values from the logfile
+    row_n = contents[row] 
+    # The lines down here isolate the values from the column.
+    split_lines = row_n.split(" ")
+    I0_list = str(split_lines[20])
+    I0_str = (I0_list.split('"'))
+    I0[row] = I0_str[1] #populates the I0 array with values from the log
+plt.plot(rows, I0)
 plt.show()
+
 
 # ---------------------------------------------- #
 ## Need to import an image, the code for this is below:
