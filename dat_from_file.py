@@ -50,11 +50,12 @@ def dat_from_file(path_in, path_out, dim=2048, tifsperdat=3, override=False):
         FF = F + tifsperdat-1
 
     for (index, dat_name) in enumerate(sorted(os.listdir(path_in)), 1): # added sorted
-        print("index=" + str(index), "dat=" + str(dat_name), "files = " + str(range(F,FF+1))) #i had to change this because my version of python wasn't allowing the previous version
+        #print("index=" + str(index), "dat=" + str(dat_name), "files = " + str(range(F,FF+1))) #i had to change this because my version of python wasn't allowing the previous version
         dat_to_tif(
             path_in + '/' + dat_name, 
             path_out, 
             [str((i)) for i in range(F,FF+1)])
         F = F + 3
         FF = FF + 3
+    print("Directory: " + path_in +" Complete! :D")
 #             [str((i)) for i in range(1,tifsperdat+1)])
