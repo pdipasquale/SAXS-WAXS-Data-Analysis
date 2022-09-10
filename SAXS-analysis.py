@@ -28,13 +28,6 @@ print(["Number of lines:", str(num_lines2)])
 #rows = list(range(0, num_lines2-1))
 rows = list(range(0, num_lines2-1))
 
-I0 = list(range(0, num_lines2-1))
-for row in rows:
-    row_n = contents[row]
-    split_lines = row_n.split(" ")
-    I0_list = str(split_lines[20])
-    I0_str = (I0_list.split('"'))
-    I0[row] = I0_str[1]
 
 plt.plot(rows[1:100], I0[1:100]) # only plotting the first 100 lines becuase there are way too many in the log file
 plt.show()
