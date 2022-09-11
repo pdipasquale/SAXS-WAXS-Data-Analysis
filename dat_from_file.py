@@ -5,7 +5,7 @@ def dat_from_file(path_in, path_out, dim=2048, tifsperdat=3, override=False):
     """
     Converts a directory of .dat files into .tif files
 
-    Data from the SAXS/WAXS beamline is saved in a .dat format, comprised of 
+    Data from the ANDOR spooling is saved in a .dat format, comprised of 
     multiple measurements. This function takes in a directory with these 
     .dat files and saves them as .tif images in another location.
 
@@ -14,9 +14,9 @@ def dat_from_file(path_in, path_out, dim=2048, tifsperdat=3, override=False):
     path_out:
         The location to save the produced .tif images
     dim:
-        The height/width of an image in pixels; at SAXS/WAXS this is usually 2048
+        The height/width of an image in pixels; for the ANDOR this is usually 2048
     tifsperdat:
-        The number of .tif images expected for a given .dat file; at SAXS/WAXS 
+        The number of .tif images expected for a given .dat file; ANDOR 
         this is usually 3. 
     override:
         If set to True, this will delete an existing output directory including 
@@ -46,11 +46,19 @@ def dat_from_file(path_in, path_out, dim=2048, tifsperdat=3, override=False):
         F = 1                    # we swap to a new directory
         FF = tifsperdat
     else:
+<<<<<<< Updated upstream
         F = len(os.listdir(path_out))
         FF = F + tifsperdat-1
     for (index, dat_name) in enumerate(sorted(os.listdir(path_in)), 1):
      # added sorted
         #print("index=" + str(index), "dat=" + str(dat_name), "files = " + str(range(F,FF+1))) #i had to change this because my version of python wasn't allowing the previous version
+=======
+        idx = len(os.listdir(path_out))
+       
+    
+    for (index, dat_name) in enumerate(sorted(os.listdir(path_in)), 1): # added sorted
+        print("index=" + str(index), "dat=" + str(dat_name)) #i had to change this because my version of python wasn't allowing the previous version
+>>>>>>> Stashed changes
         dat_to_tif(
             path_in + '/' + dat_name, 
             path_out, 
