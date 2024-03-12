@@ -52,7 +52,7 @@ def liveLogInterpreter(fileName):
     # 'real' (non-dark) frames
     temp = realFrames[0].get("TimeStamp")
     print(temp)
-    print(realFrames[5339].get("TimeStamp"))
+    print(realFrames[-1].get("TimeStamp"))
 
     # Close the log file
     logFile.close()
