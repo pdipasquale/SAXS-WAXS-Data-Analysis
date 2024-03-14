@@ -17,6 +17,7 @@
 # import the json library and plotting module
 import json
 import matplotlib.pyplot as plt
+import datetime
 
 def liveLogInterpreter(fileName):
     
@@ -50,28 +51,90 @@ def liveLogInterpreter(fileName):
 
     # just a check to see it's working, should print the timestamps of the first and last
     # 'real' (non-dark) frames
-    temp = realFrames[0].get("TimeStamp")
-    print(temp)
+    print(" ")
+    print("Reading in JSON objects test (should be initial and final timestamps followed by number of frames):")
+    print(realFrames[0].get("TimeStamp"))
     print(realFrames[-1].get("TimeStamp"))
+    print(len(realFrames))
+    print(" ")
 
     # Close the log file
     logFile.close()
 
     # in order to be able to plot particular variables with ease; create lists/arrays of
     # desired variables to be plotted;
-    v = "Ibs"
-    x = []
-    y = []
+    v = "Ibs" # This is the key being plotted, change here only
+    x = [] # this will be the time axis (in seconds) from the start of measuring
+    y = [] # this will be the variable axis
+    counter = 0
+
+    # initialise the time axis based on the timestamp
+    tstring = realFrames[0].get("TimeStamp")
+    tlist = tstring.split(' ') # split the timestamp string into a date and time string
+    dstring = tlist[0]
+    tstring = tlist[-1]
+    
+    # split the date string into year, month and day
+    dlist = dstring.split('-') 
+    yearI = int(dlist[0])
+    monthI = int(dlist[1])
+    dayI = int(dlist[2])
+
+    # split the time string into hours, minutes and seconds
+    tlist = tstring.split(':')
+    hoursI = int(tlist[0])
+    minutesI = int(tlist[1])
+    secondsI = tlist[2]
+    secondsL = secondsI.split('.')
+    secondsI = int(secondsL[0])
+    msecondsI = int(secondsL[1])
+
+    # create the initial time as a datetime object
+    tI = datetime.datetime(yearI,monthI,dayI,hoursI,minutesI,secondsI,msecondsI)
 
     # retreive the desired variable values from the realFrames list
-    for i in realFrames:
-        y.append(realFrames[i].get(v))
-        x.append(i)
+    while counter < len(realFrames):
+
+        # add the relevant value according to the key
+        y.append(realFrames[counter].get(v))
+        
+        # get the time for the x axis
+        time = realFrames[counter].get("TimeStamp")
+        tlist = time.split(' ') # split the timestamp string into a date and time string
+        dstring = tlist[0]
+        tstring = tlist[-1]
+    
+        # split the date string into year, month and day
+        dlist = dstring.split('-') 
+        year = int(dlist[0])
+        month = int(dlist[1])
+        day = int(dlist[2])
+
+        # split the time string into hours, minutes and seconds
+        tlist = tstring.split(':')
+        hours = int(tlist[0])
+        minutes = int(tlist[1])
+        seconds = tlist[2]
+        secondsL = seconds.split('.')
+        seconds = int(secondsL[0])
+        mseconds = int(secondsL[1])
+
+        # create the current time datetime object
+        tF = datetime.datetime(year,month,day,hours,minutes,seconds,mseconds)
+
+        # need to find the time in seconds from the start of the measuring keeping in mind new days/months etc.
+        t = tF-tI # creates t as a timedelta object which calculates the time passage
+
+        xval = t.total_seconds()
+
+        x.append(xval)
+        counter = counter+1
 
     # format and display the plot
     plt.plot(x,y)
-    plt.xlabel()
+    plt.xlabel('Time (seconds)')
     plt.ylabel(v)
+    plt.title("Plot of " + v + " in seconds from first measurement")
     plt.show()
     
 # =========================================================================================
