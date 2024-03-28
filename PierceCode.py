@@ -16,6 +16,7 @@
 
 # import the json library and plotting module
 import json
+import numpy as np
 import matplotlib.pyplot as plt
 import datetime # used to determine timing in experiment
 import os # this is required for the reconstruction function
@@ -62,6 +63,7 @@ def liveLogInterpreter(fileName):
     print(realFrames[-1].get("TimeStamp"))
     print(len(realFrames))
     print("Indexes of dark frames:")
+    print(" ")
     print(darkIndexes)
     print(" ")
 
@@ -148,7 +150,7 @@ def liveLogInterpreter(fileName):
 
 # Here is the script that is being used to test this code
 
-liveLogInterpreter('livelogfile.json')
+liveLogInterpreter(r"C:\Users\19396911@students.ltu.edu.au\Desktop\pdipasquale\SAXS-WAXS-Data-Analysis\livelogfile.json") # this livelog file is corresponding to the Ni_Sample1_8232_9032_3s_20f_210922_1118_att0 run
     
 ##################################################################################################################
     # TO DO LIST:
@@ -185,13 +187,13 @@ def liveReconstruction(ReconDir, pixdim, scansPerSpool):
     # determine the number of spools
     numSpools = 0
     for path, currentDirectory, files in os.walk(ReconDir):
-    for file in files:
-        if file.startswith("SpoolDirectory"):
-            numSpools+=1
+        for file in files:
+            if file.startswith("Spool"):
+                numSpools+=1
 
     # refine the paths to the spool directories into a list
     spoolDir = os.listdir(ReconDir)
-    spoolList = [word for word in spoolDir if word.startswith('SpoolDirectory')]
+    spoolList = [word for word in spoolDir if word.startswith('Spool')]
 
     # initialise structures to be taken
     diffPatterns = []
@@ -201,13 +203,32 @@ def liveReconstruction(ReconDir, pixdim, scansPerSpool):
     # which contains the average intensities in a small area of each fringe along one direction. then alignment only needs to be undertaken in one 
     # axis, dramatically cutting down run time.
 
-    
+    for index1 in range(np.shape(spoolList)[0]):
+
+        # need to get the list of files in the sub directories
+        spoolFiles = os.listdir(ReconDir + r"\SpoolDirectory" + str(index1))
+
+        for (index2, name2) in enumerate(spoolFiles):
+
+            # designate individual file path
+            file = ReconDir + r"\SpoolDirectory" + str(index1) + '\\' + name2
+
+            # read the data from the file. the data was written to the file with the tofile() function, so use the fromfile() function to retrieve it
+            data = np.fromfile(file, dtype=np.int16)
+
+            for index3 in range(scansPerSpool):
+
+                # in this branch we dissect the data retreived from the file, making checks for any empty or darkfield scans
+
+
+
+
 
 # This section runs the liveReconstruction() function
 
-ReconDir = '' # this should be the absolute path upto the 'spool' directory (i.e not the 'SpoolDirectory') that corresponds to the log file e.g;
-              # 'G:\SAXS-WAXS-Data-Analysis\Cu_foil_fdbkOff_8950_9450_5_1s_3f_160922_2100_run3\spool' when using the
-              # Cu_foil_fdbkOff_8950_9450_5_1s_3f_160922_2100_run3 log file
+ReconDir = r"F:\zzzzzDataForPiercezzzzz\Raw_Data\Ni_Sample1_8232_9032_3s_20f_210922_1118_att0\spool" # this should be the absolute path up to the
+              # 'spool' directory (i.e not the 'SpoolDirectory') that corresponds to the log file (the one here is corresponding to the livelog
+              # in the github repository)
 scansPerSpool = 3 # this is the number of frames per spool .dat
 pixdim = 2048 # this is the pixel dimensions of the detector
-liveReconstruction(ReconDir)
+liveReconstruction(ReconDir,2048,3)
