@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 import datetime # used to determine timing in experiment
 import os # this is required for the reconstruction function
 
-def liveLogInterpreter(fileName):
+def liveLogInterpreter(fileName,v,form):
     
     # Open the log file to be read in
     logFile = open(fileName,"r")
@@ -72,7 +72,6 @@ def liveLogInterpreter(fileName):
 
     # in order to be able to plot particular variables with ease; create lists/arrays of
     # desired variables to be plotted;
-    v = "Ibs" # This is the key being plotted, change here only
     x = [] # this will be the time axis (in seconds) from the start of measuring
     y = [] # this will be the variable axis
     counter = 0
@@ -139,18 +138,32 @@ def liveLogInterpreter(fileName):
         x.append(xval)
         counter = counter+1
 
-    # format and display the plot
-    plt.plot(x,y)
-    plt.xlabel('Time (seconds)')
-    plt.ylabel(v)
-    plt.title("Plot of " + v + " in seconds from first measurement")
-    plt.show()
+    # format and display the plot based on desired plot type input
+        if form == "line":
+
+            plt.plot(x,y) # plots with line
+            plt.xlabel('Time (seconds)')
+            plt.ylabel(v)
+            plt.title("Plot of " + v + " in seconds from first measurement")
+            plt.show()
+        
+        elif form == "dot":
+        
+            plt.plot(x,y,'o') # plots with dots
+            plt.xlabel('Time (seconds)')
+            plt.ylabel(v)
+            plt.title("Plot of " + v + " in seconds from first measurement")
+            plt.show()
+
+        else:
+        
+            print("\nNot a Valid Plot Type, try 'line' or 'dot'\n") # output for incorrect input string
 
 # ========================================================================================================================
 
 # Here is the script that is being used to test this code
 
-liveLogInterpreter(r"C:\Users\19396911@students.ltu.edu.au\Desktop\pdipasquale\SAXS-WAXS-Data-Analysis\livelogfile.json") # this livelog file is corresponding to the Ni_Sample1_8232_9032_3s_20f_210922_1118_att0 run
+liveLogInterpreter(r"C:\Users\19396911@students.ltu.edu.au\Desktop\pdipasquale\SAXS-WAXS-Data-Analysis\livelogfile.json","Ibs","line") # this livelog file is corresponding to the Ni_Sample1_8232_9032_3s_20f_210922_1118_att0 run
     
 ##################################################################################################################
     # TO DO LIST:
@@ -231,7 +244,7 @@ def liveReconstruction(ReconDir, pixdim, scansPerSpool):
                     dark = data[index3 * pixdim**2:(index3 + 1) * pixdim**2].reshape(pixdim,pixdim)  # convert the data to the 2D pattern
                     darkPatterns.append(dark) # store the pattern
 
-                else
+                else:
                     
                     # this is where the diffraction patterns are retrieved, where the slice is taken and then the reconstruction is applied
                     diff = data[index3 * pixdim**2:(index3 + 1) * pixdim**2].reshape(pixdim,pixdim) # convert the data to the 2D pattern
@@ -246,10 +259,6 @@ def liveReconstruction(ReconDir, pixdim, scansPerSpool):
                     # The reconstruction will occur here post Paul's averaging, slicing and pre-recon alignment of the patterns
 
                 fnum+=1
-
-
-
-
 
 # This section runs the liveReconstruction() function
 
