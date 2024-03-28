@@ -197,11 +197,15 @@ def liveReconstruction(ReconDir, pixdim, scansPerSpool):
 
     # initialise structures to be taken
     diffPatterns = []
+    darkPatterns = []
 
     # now go through and retrieve the diffraction patterns from the spool files, keeping in mind that we want to cut the run time down for the live
     # analysis. So instead of the entire diffraction pattern, we are taking a line across the pattern and creating an array per diffraction pattern
     # which contains the average intensities in a small area of each fringe along one direction. then alignment only needs to be undertaken in one 
     # axis, dramatically cutting down run time.
+
+    # counter to keep track of the current frame number
+    fnum = 0
 
     for index1 in range(np.shape(spoolList)[0]):
 
@@ -218,7 +222,30 @@ def liveReconstruction(ReconDir, pixdim, scansPerSpool):
 
             for index3 in range(scansPerSpool):
 
-                # in this branch we dissect the data retreived from the file, making checks for any empty or darkfield scans
+                # in this branch we dissect the data retreived from the file, making checks for any empty or darkfield scans and omitting them from
+                # the reconstruction process
+
+                if fnum+1 in darkIndexes: # check for dark field (plus one because of indexing)
+
+                    # this is where the darkfields are ommited from reconstruction but stored in the dark patterns array
+                    dark = data[index3 * pixdim**2:(index3 + 1) * pixdim**2].reshape(pixdim,pixdim)  # convert the data to the 2D pattern
+                    darkPatterns.append(dark) # store the pattern
+
+                else
+                    
+                    # this is where the diffraction patterns are retrieved, where the slice is taken and then the reconstruction is applied
+                    diff = data[index3 * pixdim**2:(index3 + 1) * pixdim**2].reshape(pixdim,pixdim) # convert the data to the 2D pattern
+                    
+                    # ==================================================================
+
+                        # This is the section where Paul's averaging and slicing method alternative will occur
+                        # Averaging - Slicing- Alignment (pre-recon)
+
+                    # ==================================================================
+
+                    # The reconstruction will occur here post Paul's averaging, slicing and pre-recon alignment of the patterns
+
+                fnum+=1
 
 
 
