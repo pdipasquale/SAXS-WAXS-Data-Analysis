@@ -17,11 +17,13 @@
 # import the json library and plotting module
 import json
 import numpy as np
+from scipy.fft import *
+from alignment import align1D
 import matplotlib.pyplot as plt
 import datetime # used to determine timing in experiment
 import os # this is required for the reconstruction function
 
-def liveLogInterpreter(fileName,v,form):
+def liveLogInterpreter(fileName):
     
     # Open the log file to be read in
     logFile = open(fileName,"r")
@@ -72,6 +74,7 @@ def liveLogInterpreter(fileName,v,form):
 
     # in order to be able to plot particular variables with ease; create lists/arrays of
     # desired variables to be plotted;
+    v = "Ibs" # This is the key being plotted, change here only
     x = [] # this will be the time axis (in seconds) from the start of measuring
     y = [] # this will be the variable axis
     counter = 0
@@ -138,32 +141,18 @@ def liveLogInterpreter(fileName,v,form):
         x.append(xval)
         counter = counter+1
 
-    # format and display the plot based on desired plot type input
-        if form == "line":
-
-            plt.plot(x,y) # plots with line
-            plt.xlabel('Time (seconds)')
-            plt.ylabel(v)
-            plt.title("Plot of " + v + " in seconds from first measurement")
-            plt.show()
-        
-        elif form == "dot":
-        
-            plt.plot(x,y,'o') # plots with dots
-            plt.xlabel('Time (seconds)')
-            plt.ylabel(v)
-            plt.title("Plot of " + v + " in seconds from first measurement")
-            plt.show()
-
-        else:
-        
-            print("\nNot a Valid Plot Type, try 'line' or 'dot'\n") # output for incorrect input string
+    # format and display the plot
+    plt.plot(x,y)
+    plt.xlabel('Time (seconds)')
+    plt.ylabel(v)
+    plt.title("Plot of " + v + " in seconds from first measurement")
+    plt.show()
 
 # ========================================================================================================================
 
 # Here is the script that is being used to test this code
 
-liveLogInterpreter(r"C:\Users\19396911@students.ltu.edu.au\Desktop\pdipasquale\SAXS-WAXS-Data-Analysis\livelogfile.json","Ibs","line") # this livelog file is corresponding to the Ni_Sample1_8232_9032_3s_20f_210922_1118_att0 run
+liveLogInterpreter(r"C:\Users\19396911@students.ltu.edu.au\Desktop\pdipasquale\SAXS-WAXS-Data-Analysis\livelogfile.json") # this livelog file is corresponding to the Ni_Sample1_8232_9032_3s_20f_210922_1118_att0 run
     
 ##################################################################################################################
     # TO DO LIST:
@@ -238,27 +227,40 @@ def liveReconstruction(ReconDir, pixdim, scansPerSpool):
                 # in this branch we dissect the data retreived from the file, making checks for any empty or darkfield scans and omitting them from
                 # the reconstruction process
 
-                if fnum+1 in darkIndexes: # check for dark field (plus one because of indexing)
+                if fnum+1 in darkIndexes: # darkIndexes move to global?? need to get the indexes from log interpreter function.
 
                     # this is where the darkfields are ommited from reconstruction but stored in the dark patterns array
+
                     dark = data[index3 * pixdim**2:(index3 + 1) * pixdim**2].reshape(pixdim,pixdim)  # convert the data to the 2D pattern
                     darkPatterns.append(dark) # store the pattern
 
-                else:
+                else
                     
                     # this is where the diffraction patterns are retrieved, where the slice is taken and then the reconstruction is applied
+
                     diff = data[index3 * pixdim**2:(index3 + 1) * pixdim**2].reshape(pixdim,pixdim) # convert the data to the 2D pattern
                     
-                    # ==================================================================
+                    # create the reference pattern to align to;
+                    refDiff = np.zeros(2048)
+                    refDiff[1014:1034] = 1
 
-                        # This is the section where Paul's averaging and slicing method alternative will occur
-                        # Averaging - Slicing- Alignment (pre-recon)
+                    # need to slice the measured diffraction pattern to get 1D pattern;
 
-                    # ==================================================================
+                    # first find the position of the maximum intensity to take the slice of the pattern along that vertical
+                    maxPos = np.unravel_index(np.argmax(diff, axis = None), diff.shape)
+                    diffSlice = diff[:, maxPos(1) - 10 : maxPos(1) + 10] # going to get an average of the max point +/- 10 pixels each side of it
 
-                    # The reconstruction will occur here post Paul's averaging, slicing and pre-recon alignment of the patterns
+                    # then average along the horizontal (perpendicular to the diffraction pattern) to make the 1D diffraction pattern
+                    diff1D = np.mean(diffSlice, axis = 1)
+
+                    # align the measured pattern to the reference pattern;
+                    aligned, crop = align1D(refDiff, diff1D) # returns the 1D-aligned pattern and the 
+
+                    # Reconstruction step
+                    recon = fftshift(ifft(fftshift(aligned)))
 
                 fnum+=1
+
 
 # This section runs the liveReconstruction() function
 
