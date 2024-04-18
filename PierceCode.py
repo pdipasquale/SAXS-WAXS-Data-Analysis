@@ -147,13 +147,14 @@ def liveLogInterpreter(fileName):
     plt.ylabel(v)
     plt.title("Plot of " + v + " in seconds from first measurement")
     plt.show()
+    return darkIndexes
 
 # ========================================================================================================================
 
 # Here is the script that is being used to test this code
 
-liveLogInterpreter(r"C:\Users\19396911@students.ltu.edu.au\Desktop\pdipasquale\SAXS-WAXS-Data-Analysis\livelogfile.json") # this livelog file is corresponding to the Ni_Sample1_8232_9032_3s_20f_210922_1118_att0 run
-    
+#liveLogInterpreter(r"C:\Users\19396911@students.ltu.edu.au\Desktop\pdipasquale\SAXS-WAXS-Data-Analysis\livelogfile.json") # this livelog file is corresponding to the Ni_Sample1_8232_9032_3s_20f_210922_1118_att0 run
+darkIndexes = liveLogInterpreter(r"F:\Paul_Data\SAXS-Sept2022\18771b\Ni_Sample1_8232_9032_3s_20f_210922_1118_att0\scatterbrain\livelogfile.json") # Paul system log path
 ##################################################################################################################
     # TO DO LIST:
     # Need to add parts that align and reconstruct
@@ -200,7 +201,7 @@ def liveReconstruction(ReconDir, pixdim, scansPerSpool):
     # initialise structures to be taken
     diffPatterns = []
     darkPatterns = []
-
+    recon_map = []
     # now go through and retrieve the diffraction patterns from the spool files, keeping in mind that we want to cut the run time down for the live
     # analysis. So instead of the entire diffraction pattern, we are taking a line across the pattern and creating an array per diffraction pattern
     # which contains the average intensities in a small area of each fringe along one direction. then alignment only needs to be undertaken in one 
@@ -234,7 +235,7 @@ def liveReconstruction(ReconDir, pixdim, scansPerSpool):
                     dark = data[index3 * pixdim**2:(index3 + 1) * pixdim**2].reshape(pixdim,pixdim)  # convert the data to the 2D pattern
                     darkPatterns.append(dark) # store the pattern
 
-                else
+                else:
                     
                     # this is where the diffraction patterns are retrieved, where the slice is taken and then the reconstruction is applied
 
@@ -248,7 +249,7 @@ def liveReconstruction(ReconDir, pixdim, scansPerSpool):
 
                     # first find the position of the maximum intensity to take the slice of the pattern along that vertical
                     maxPos = np.unravel_index(np.argmax(diff, axis = None), diff.shape)
-                    diffSlice = diff[:, maxPos(1) - 10 : maxPos(1) + 10] # going to get an average of the max point +/- 10 pixels each side of it
+                    diffSlice = diff[:, maxPos[1] - 10 : maxPos[1] + 10] # going to get an average of the max point +/- 10 pixels each side of it
 
                     # then average along the horizontal (perpendicular to the diffraction pattern) to make the 1D diffraction pattern
                     diff1D = np.mean(diffSlice, axis = 1)
@@ -264,7 +265,8 @@ def liveReconstruction(ReconDir, pixdim, scansPerSpool):
 
 # This section runs the liveReconstruction() function
 
-ReconDir = r"F:\zzzzzDataForPiercezzzzz\Raw_Data\Ni_Sample1_8232_9032_3s_20f_210922_1118_att0\spool" # this should be the absolute path up to the
+#ReconDir = r"F:\zzzzzDataForPiercezzzzz\Raw_Data\Ni_Sample1_8232_9032_3s_20f_210922_1118_att0\spool" # this should be the absolute path up to the
+ReconDir = r"F:\Paul_Data\SAXS-Sept2022\18771b\Ni_Sample1_8232_9032_3s_20f_210922_1118_att0\spool" # This is for testing on paul's system
               # 'spool' directory (i.e not the 'SpoolDirectory') that corresponds to the log file (the one here is corresponding to the livelog
               # in the github repository)
 scansPerSpool = 3 # this is the number of frames per spool .dat
