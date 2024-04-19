@@ -35,7 +35,7 @@ def transmission(energy, delta, beta, thickness):
 # TEST RUN
 thickness = 5E-6 # metres
 
-fname = '.\Fe.txt'
+fname = '.HenkeTables\Fe.txt'
 data  = np.genfromtxt(fname, delimiter='  ', skip_header=2).transpose()
 energy, delta, beta = data
 
