@@ -22,8 +22,9 @@ from alignment import align1D
 import matplotlib.pyplot as plt
 import datetime # used to determine timing in experiment
 import os # this is required for the reconstruction function
+from progress.bar import Bar
 
-def liveLogInterpreter(fileName):
+def liveLogInterpreter(fileName, v):
     
     # Open the log file to be read in
     logFile = open(fileName,"r")
@@ -74,7 +75,7 @@ def liveLogInterpreter(fileName):
 
     # in order to be able to plot particular variables with ease; create lists/arrays of
     # desired variables to be plotted;
-    v = "Ibs" # This is the key being plotted, change here only
+    #v = "Ibs" # This is the key being plotted, change here only
     x = [] # this will be the time axis (in seconds) from the start of measuring
     y = [] # this will be the variable axis
     counter = 0
@@ -142,11 +143,11 @@ def liveLogInterpreter(fileName):
         counter = counter+1
 
     # format and display the plot
-    plt.plot(x,y)
-    plt.xlabel('Time (seconds)')
-    plt.ylabel(v)
-    plt.title("Plot of " + v + " in seconds from first measurement")
-    plt.show()
+#    plt.plot(x,y)
+#    plt.xlabel('Time (seconds)')
+#    plt.ylabel(v)
+#    plt.title("Plot of " + v + " in seconds from first measurement")
+#    plt.show()
     return darkIndexes
 
 # ========================================================================================================================
@@ -154,7 +155,7 @@ def liveLogInterpreter(fileName):
 # Here is the script that is being used to test this code
 
 #liveLogInterpreter(r"C:\Users\19396911@students.ltu.edu.au\Desktop\pdipasquale\SAXS-WAXS-Data-Analysis\livelogfile.json") # this livelog file is corresponding to the Ni_Sample1_8232_9032_3s_20f_210922_1118_att0 run
-darkIndexes = liveLogInterpreter(r"F:\Paul_Data\SAXS-Sept2022\18771b\Ni_Sample1_8232_9032_3s_20f_210922_1118_att0\scatterbrain\livelogfile.json") # Paul system log path
+darkIndexes = liveLogInterpreter(r"D:\SynchrotronImages\Ni_Sample1_8232_9032_3s_20f_210922_1118_att0\scatterbrain\livelogfile.json", "Ibs") # Paul system log path
 ##################################################################################################################
     # TO DO LIST:
     # Need to add parts that align and reconstruct
@@ -209,7 +210,7 @@ def liveReconstruction(ReconDir, pixdim, scansPerSpool):
 
     # counter to keep track of the current frame number
     fnum = 0
-
+    bar = Bar('Processing', max=numSpools*3)
     for index1 in range(np.shape(spoolList)[0]):
 
         # need to get the list of files in the sub directories
@@ -227,7 +228,7 @@ def liveReconstruction(ReconDir, pixdim, scansPerSpool):
 
                 # in this branch we dissect the data retreived from the file, making checks for any empty or darkfield scans and omitting them from
                 # the reconstruction process
-
+                real_frame = 0
                 if fnum+1 in darkIndexes: # darkIndexes move to global?? need to get the indexes from log interpreter function.
 
                     # this is where the darkfields are ommited from reconstruction but stored in the dark patterns array
@@ -255,20 +256,43 @@ def liveReconstruction(ReconDir, pixdim, scansPerSpool):
                     diff1D = np.mean(diffSlice, axis = 1)
 
                     # align the measured pattern to the reference pattern;
-                    aligned, crop = align1D(refDiff, diff1D) # returns the 1D-aligned pattern and the 
-
+                    misaligned, cropped = align1D(refDiff, diff1D) # returns the 1D-aligned pattern and the 
                     # Reconstruction step
-                    recon = fftshift(ifft(fftshift(aligned)))
+                    recon = fftshift(ifft(fftshift(cropped)))
+                    
+                                      
+                    mid = round(len(recon)/2)
+                    if real_frame == 0:
+                        cropped_map = cropped
+                        recon_map = recon[mid-100:mid+100]
 
+                    else:
+                        recon_map = np.vstack((recon_map, recon[mid-100:mid+100]))
+                        if np.shape(cropped_map)[0] == len(cropped):
+                            crop_diff =  np.shape(cropped_map)[0] - len(cropped)
+                            cropped2 = cropped[0, (crop_diff/2 // 1) : (len(cropped) - crop_diff/2 // 1 + 1)]
+                            np.vstack((cropped_map, cropped2))
+                        else:
+                            np.vstack((cropped_map, cropped))
+
+                real_frame+=1
                 fnum+=1
-
+                
+                bar.next()
+    bar.finish()                
+    return cropped_map, recon_map
 
 # This section runs the liveReconstruction() function
 
 #ReconDir = r"F:\zzzzzDataForPiercezzzzz\Raw_Data\Ni_Sample1_8232_9032_3s_20f_210922_1118_att0\spool" # this should be the absolute path up to the
-ReconDir = r"F:\Paul_Data\SAXS-Sept2022\18771b\Ni_Sample1_8232_9032_3s_20f_210922_1118_att0\spool" # This is for testing on paul's system
+ReconDir = r"D:\SynchrotronImages\Ni_Sample1_8232_9032_3s_20f_210922_1118_att0\spool" # This is for testing on paul's system
               # 'spool' directory (i.e not the 'SpoolDirectory') that corresponds to the log file (the one here is corresponding to the livelog
               # in the github repository)
 scansPerSpool = 3 # this is the number of frames per spool .dat
 pixdim = 2048 # this is the pixel dimensions of the detector
-liveReconstruction(ReconDir,2048,3)
+cropped_map, recon_map = liveReconstruction(ReconDir,2048,3)
+
+## Something's wrong with the loop through stacking the map
+print(np.size(recon_map))
+plt.imshow(abs(recon_map))
+plt.show()

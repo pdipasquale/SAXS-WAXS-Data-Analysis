@@ -45,15 +45,15 @@ def align1D(ref1D, offset_image1D):
     #shift1D = 13.71
     #offset_image1D = gauss1D_OS
 
-    shift1D, error1D, diffphase1D = phase_cross_correlation(ref1D, offset_image1D)
-    print(f'Detected 1D pixel offset {shift1D}')
+    #shift1D, error1D, diffphase1D = phase_cross_correlation(ref1D, offset_image1D)
+    #print(f'Detected 1D pixel offset {shift1D}')
 
     # subpixel precision
     shift1D_sub, error, diffphase = phase_cross_correlation(ref1D, offset_image1D, upsample_factor=100)
-    print(f'Detected 1D pixel offset {shift1D_sub}')
+    #print(f'Detected 1D pixel offset {shift1D_sub}')
     shift1D_sub_round = round(float(shift1D_sub))
     # numpy.multiply
-    if shift1D < 0:
+    if shift1D_sub < 0:
         ez_crop = offset_image1D[int(abs(shift1D_sub_round)):-1]
     else:
         ez_crop = offset_image1D[0:-int(shift1D_sub_round)]
@@ -61,23 +61,23 @@ def align1D(ref1D, offset_image1D):
     # I need to finish adapting the next line to work properly in python :/
     # g = np.ifft( np.multiply( np.fft(offset_image1D), np.exp( 1i*2*pi*(deltar*Nr/nr) ) ) ) #.*np.exp(-1i*diffphase);
     
-    return shift1D, ez_crop
+    return shift1D_sub, ez_crop
 
-x_array = np.linspace(-1024, 1024, 2048) # test array for 1D
+#x_array = np.linspace(-1024, 1024, 2048) # test array for 1D
 
-gauss1D = gaussian(x_array, 0, 200)
-gauss1D_OS = gaussian(x_array, 13.71, 200)
+#gauss1D = gaussian(x_array, 0, 200)
+#gauss1D_OS = gaussian(x_array, 13.71, 200)
 
-start_time = time.time()
+#start_time = time.time()
 
-shift1D, ez_crop = align1D(gauss1D, gauss1D_OS)
+#shift1D, ez_crop = align1D(gauss1D, gauss1D_OS)
 # plt.plot(x_array[500:1500], gauss1D[500:1500])
 # plt.plot(x_array[500:1500], gauss1D_OS[500:1500])
 # plt.plot(x_array[500:1500], ez_crop[500:1500])
 # plt.show()
 
-finish_time = time.time()
+#finish_time = time.time()
 
-print("--- %s seconds ---" % (finish_time - start_time))
+#print("--- %s seconds ---" % (finish_time - start_time))
 
-print(f'Detected subpixel offset (y, x): {shift1D}')
+#print(f'Detected subpixel offset (y, x): {shift1D}')
