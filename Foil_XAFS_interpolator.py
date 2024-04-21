@@ -33,21 +33,17 @@ sample_dir, edge = element_data[element]
 range_eval = np.concatenate((
     np.arange(-100, -10, 1), np.arange(-10, 0, 0.5), np.arange(0, 100, 1), np.arange(100, 400, 2)
 ))
-#print(range_eval)
 
 # Import the XAFS Data
 file = open(sample_dir, 'r')
 lines = file.readlines()
 
 with open(sample_dir, 'r') as file:
-    lines = file.readlines()
-    data_array = [line.strip().split() for line in lines]
-converted_array = np.array(data_array)
-full_array = converted_array.astype(float)
-
+    lines = file.readlines()    
+    full_array = np.array([line.strip().split() for line in lines], dtype=float)
+    
 energy = full_array[0:-1, 0]
 absorption = full_array[0:-1, 1]
-
 interp_abs = np.interp(range_eval + edge, energy, absorption)
 
 #plt.plot(energy, absorption)
