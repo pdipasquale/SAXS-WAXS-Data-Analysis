@@ -31,9 +31,9 @@ element = 'Ni'
 sample_dir, edge = element_data[element]
 # Put the energy range to evaluate here, it's all calculated relative to the edge
 range_eval = np.concatenate((
-    np.arange(-20, 0, 0.5), np.arange(0, 100, 1), np.arange(100, 400, 2)
+    np.arange(-100, -10, 1), np.arange(-10, 0, 0.5), np.arange(0, 100, 1), np.arange(100, 400, 2)
 ))
-print(range_eval)
+#print(range_eval)
 
 # Import the XAFS Data
 file = open(sample_dir, 'r')
@@ -50,8 +50,10 @@ absorption = full_array[0:-1, 1]
 
 interp_abs = np.interp(range_eval + edge, energy, absorption)
 
-plt.plot(energy, absorption)
-plt.show()
+#plt.plot(energy, absorption)
+#plt.show()
 
-plt.plot(range_eval, interp_abs, '--bo', label='Interpolated ' + element)
+plt.plot(range_eval, interp_abs, '--bo')
+plt.title('Interpolated ' + element)
+plt.xlabel('Energy (eV)')
 plt.show()
