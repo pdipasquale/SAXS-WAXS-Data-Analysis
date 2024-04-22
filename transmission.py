@@ -32,19 +32,24 @@ def transmission(energy, delta, beta, thickness):
     
     return re_fac * im_fac
 
+
+def interp_delta_beta(energy_interp, energy, delta, beta):
+    return (np.interp(energy_interp, energy, delta), 
+            np.interp(energy_interp, energy, beta))
+
 # TEST RUN
+"""
 thickness = 5E-6 # metres
 
-fname = '.HenkeTables\Fe.txt'
+fname = './HenkeTables/Fe.txt'
 data  = np.genfromtxt(fname, delimiter='  ', skip_header=2).transpose()
 energy, delta, beta = data
 
 energy_p = np.linspace(energy[0], energy[-1], 1000)
-delta_p  = np.interp(energy_p, energy, delta)
-beta_p   = np.interp(energy_p, energy, beta)
+delta_p, beta_p  = interp_delta_beta(energy_p, energy, delta, beta)
 
 trans = transmission(energy_p, delta_p, beta_p, thickness)
 
-
 plt.plot(energy_p, np.sqrt(np.real(trans)**2 + np.imag(trans)**2) / constants['eV'])
 plt.show()
+"""
