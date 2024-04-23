@@ -24,8 +24,8 @@ import datetime # used to determine timing in experiment
 import os # this is required for the reconstruction function
 from progress.bar import Bar
 
-def liveLogInterpreter(fileName, v):
-    
+def liveLogInterpreter(fileName):
+
     # Open the log file to be read in
     logFile = open(fileName,"r")
 
@@ -75,9 +75,10 @@ def liveLogInterpreter(fileName, v):
 
     # in order to be able to plot particular variables with ease; create lists/arrays of
     # desired variables to be plotted;
-    #v = "Ibs" # This is the key being plotted, change here only
+    v = "Ibs" # This is the key being plotted, change here only
     x = [] # this will be the time axis (in seconds) from the start of measuring
     y = [] # this will be the variable axis
+    energy = []
     counter = 0
 
     # initialise the time axis based on the timestamp
@@ -109,7 +110,7 @@ def liveLogInterpreter(fileName, v):
 
         # add the relevant value according to the key
         y.append(realFrames[counter].get(v))
-        
+        energy.append((realFrames[counter].get("Si111_monochromator_energy")))
         # get the time for the x axis
         time = realFrames[counter].get("TimeStamp")
         tlist = time.split(' ') # split the timestamp string into a date and time string
@@ -140,6 +141,7 @@ def liveLogInterpreter(fileName, v):
         xval = t.total_seconds()
 
         x.append(xval)
+        
         counter = counter+1
 
     # format and display the plot
@@ -148,14 +150,16 @@ def liveLogInterpreter(fileName, v):
 #    plt.ylabel(v)
 #    plt.title("Plot of " + v + " in seconds from first measurement")
 #    plt.show()
-    return darkIndexes
+    Ibs_array = y
+
+    return darkIndexes, Ibs_array, energy
 
 # ========================================================================================================================
 
 # Here is the script that is being used to test this code
 
 #liveLogInterpreter(r"C:\Users\19396911@students.ltu.edu.au\Desktop\pdipasquale\SAXS-WAXS-Data-Analysis\livelogfile.json") # this livelog file is corresponding to the Ni_Sample1_8232_9032_3s_20f_210922_1118_att0 run
-darkIndexes = liveLogInterpreter(r"D:\SynchrotronImages\Ni_Sample1_8232_9032_3s_20f_210922_1118_att0\scatterbrain\livelogfile.json", "Ibs") # Paul system log path
+#darkIndexes = liveLogInterpreter(r"D:\SynchrotronImages\Ni_Sample1_8232_9032_3s_20f_210922_1118_att0\scatterbrain\livelogfile.json", "Ibs") # Paul system log path
 ##################################################################################################################
     # TO DO LIST:
     # Need to add parts that align and reconstruct
@@ -176,7 +180,7 @@ darkIndexes = liveLogInterpreter(r"D:\SynchrotronImages\Ni_Sample1_8232_9032_3s_
 # However, when the dimensions of the detector are changed there can be more or less scans fit into a spool file. As these
 # parameters change the code will need to as well.
 
-def liveReconstruction(ReconDir, pixdim, scansPerSpool):
+def liveReconstruction(ReconDir, pixdim, scansPerSpool, darkIndexes):
 
     # First step is to collect all of the spool files data. how many there are as well as retrieving the diffraciton patterns and the frame number.
     # The current plan is to create a 2D data structure with one dimension as the frame number and the other dimension is the diffration pattern.
@@ -271,9 +275,9 @@ def liveReconstruction(ReconDir, pixdim, scansPerSpool):
                         if np.shape(cropped_map)[0] == len(cropped):
                             crop_diff =  np.shape(cropped_map)[0] - len(cropped)
                             cropped2 = cropped[0, (crop_diff/2 // 1) : (len(cropped) - crop_diff/2 // 1 + 1)]
-                            np.vstack((cropped_map, cropped2))
+                            np.hstack((cropped_map, cropped2))
                         else:
-                            np.vstack((cropped_map, cropped))
+                            np.hstack((cropped_map, cropped))
 
                 real_frame+=1
                 fnum+=1
@@ -285,14 +289,14 @@ def liveReconstruction(ReconDir, pixdim, scansPerSpool):
 # This section runs the liveReconstruction() function
 
 #ReconDir = r"F:\zzzzzDataForPiercezzzzz\Raw_Data\Ni_Sample1_8232_9032_3s_20f_210922_1118_att0\spool" # this should be the absolute path up to the
-ReconDir = r"D:\SynchrotronImages\Ni_Sample1_8232_9032_3s_20f_210922_1118_att0\spool" # This is for testing on paul's system
+#ReconDir = r"D:\SynchrotronImages\Ni_Sample1_8232_9032_3s_20f_210922_1118_att0\spool" # This is for testing on paul's system
               # 'spool' directory (i.e not the 'SpoolDirectory') that corresponds to the log file (the one here is corresponding to the livelog
               # in the github repository)
-scansPerSpool = 3 # this is the number of frames per spool .dat
-pixdim = 2048 # this is the pixel dimensions of the detector
-cropped_map, recon_map = liveReconstruction(ReconDir,2048,3)
+#scansPerSpool = 3 # this is the number of frames per spool .dat
+#pixdim = 2048 # this is the pixel dimensions of the detector
+#cropped_map, recon_map = liveReconstruction(ReconDir,2048,3)
 
 ## Something's wrong with the loop through stacking the map
-print(np.size(recon_map))
-plt.imshow(abs(recon_map))
-plt.show()
+#print(np.size(recon_map))
+#plt.imshow(abs(recon_map))
+#plt.show()
