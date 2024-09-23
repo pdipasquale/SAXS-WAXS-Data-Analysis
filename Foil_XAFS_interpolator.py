@@ -30,22 +30,8 @@ element_data = {
 element = 'Ni'
 sample_dir, edge = element_data[element]
 # Put the energy range to evaluate here, it's all calculated relative to the edge
-#range_eval = np.concatenate((
-#    np.arange(-200, -80, 4), 
-#    np.arange(-80, -40, 2), 
-#    np.arange(-40, -20, 1), 
-#    np.arange(-20, 100, 0.5), 
-#    np.arange(100, 200, 1), 
-#    np.arange(200, 400, 2), 
-#    np.arange(400, 500, 4),
-#    np.arange(400, 500, 4),
-#))
-
 range_eval = np.concatenate((
-    np.arange(80, 150, 2), 
-    np.arange(150, 201, 3), 
-    np.arange(201, 301, 4),
-    np.arange(301, 621, 8),
+    np.arange(-100, -10, 1), np.arange(-10, 0, 0.5), np.arange(0, 100, 1), np.arange(100, 400, 2)
 ))
 
 # Import the XAFS Data
