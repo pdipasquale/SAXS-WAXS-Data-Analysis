@@ -16,5 +16,5 @@ led by Dr. Chanh Tran and Prof. Christopher Chantler.
 Dr. Chanh Tran:
     - https://scholars.latrobe.edu.au/c2tran
     
-Prof. Christoer Chantler:
+Prof. Christopher Chantler:
     - https://findanexpert.unimelb.edu.au/profile/861-christopher-chantler
