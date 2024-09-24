@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+FFAST_Tables/
+HenkeTables/
+XAFS_NIMS_Database_spectra/
