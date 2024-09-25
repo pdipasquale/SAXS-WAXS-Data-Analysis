@@ -1,8 +1,0 @@
-Copper:
-https://mdr.nims.go.jp/concern/datasets/2z10ws744?locale=en
-
-Nickel:
-https://mdr.nims.go.jp/concern/datasets/8p58pg709?locale=en
-
-Iron:
-https://mdr.nims.go.jp/concern/datasets/r494vn542?locale=en
